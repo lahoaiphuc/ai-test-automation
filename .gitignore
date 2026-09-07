@@ -1,6 +1,17 @@
+# ==============================
+# Node.js
+# ==============================
 node_modules/
+
+# ==============================
+# Playwright
+# ==============================
 playwright-report/
 test-results/
 blob-report/
 playwright/.cache/
+
+# ==============================
+# Environment variables / Secrets
+# ==============================
 .env
