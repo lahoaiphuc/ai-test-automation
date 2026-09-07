@@ -1,44 +1,47 @@
 import { defineConfig, devices } from '@playwright/test';
-import * as dotenv from 'dotenv';
+import { ENV } from './configs/env.config';
 
-dotenv.config();
-
+/**
+ * Cấu hình trung tâm của Playwright Test.
+ * Mọi giá trị phụ thuộc môi trường đều lấy từ `ENV` (configs/env.config.ts),
+ * không hardcode URL / credential ở đây.
+ */
 export default defineConfig({
   testDir: './tests',
-  timeout: 30_000,
-  expect: {
-    timeout: 5_000,
-  },
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  // Run all specs from all projects (chromium/firefox/webkit) concurrently.
-  // Undefined lets Playwright pick a worker count from the machine's CPU cores;
-  // override with `PW_WORKERS` when you want a fixed number (e.g. in CI).
-  workers: process.env.PW_WORKERS ? Number(process.env.PW_WORKERS) : (process.env.CI ? 3 : undefined),
+  outputDir: './test-results',
+
+  /* --- Timeout --- */
+  timeout: 45_000, // Ngân sách thời gian cho mỗi test
+  expect: { timeout: 10_000 }, // Ngân sách cho mỗi web-first assertion (auto-retry)
+
+  /* --- Ổn định & song song --- */
+  fullyParallel: true, // Chạy song song cả trong cùng 1 file
+  forbidOnly: !!process.env.CI, // Chặn test.only lọt vào CI
+  retries: process.env.CI ? 2 : 1,
+  workers: process.env.CI ? 3 : '50%', // Local: dùng 50% số CPU core; CI: cố định 3
+
+  /* --- Reporters --- */
   reporter: [
-    ['html', { open: 'never' }],
     ['list'],
+    ['html', { outputFolder: 'reports/html', open: 'never' }],
+    ['junit', { outputFile: 'reports/junit/results.xml' }],
   ],
+
+  /* --- Mặc định cho mọi test --- */
   use: {
-    baseURL: process.env.BASE_URL ?? 'https://crm.anhtester.com',
+    baseURL: ENV.baseURL,
+    actionTimeout: 15_000,
+    navigationTimeout: 30_000,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    actionTimeout: 10_000,
+    testIdAttribute: 'data-testid',
   },
+
+  /* --- Đa trình duyệt --- */
   projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
   ],
 });

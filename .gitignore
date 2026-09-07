@@ -4,8 +4,9 @@
 node_modules/
 
 # ==============================
-# Playwright
+# Playwright / Reports
 # ==============================
+reports/
 playwright-report/
 test-results/
 blob-report/
@@ -15,3 +16,6 @@ playwright/.cache/
 # Environment variables / Secrets
 # ==============================
 .env
+.env.dev
+.env.staging
+.env.prod
