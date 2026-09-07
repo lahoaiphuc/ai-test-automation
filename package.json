@@ -11,7 +11,7 @@
     "test:chromium": "playwright test --project=chromium",
     "test:firefox": "playwright test --project=firefox",
     "test:webkit": "playwright test --project=webkit",
-    "test:headed": "playwright test --headed",
+    "test:headed": "cross-env HEADED=true playwright test --project=chromium --workers=1",
     "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug",
     "test:smoke": "playwright test --grep @smoke",

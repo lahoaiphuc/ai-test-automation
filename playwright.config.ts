@@ -30,9 +30,9 @@ export default defineConfig({
   /* --- Mặc định cho mọi test --- */
   use: {
     baseURL: ENV.baseURL,
-    // Local: chạy headed để dễ quan sát; CI: luôn headless.
-    // Ép headless ở local khi cần:  HEADLESS=true npm test
-    headless: !!process.env.CI || process.env.HEADLESS === 'true',
+    // Mặc định headless (nhanh + ổn định, nhất là WebKit trên Linux).
+    // Muốn xem trình duyệt chạy:  HEADED=true npm test  hoặc  npm run test:headed
+    headless: process.env.HEADED !== 'true',
     actionTimeout: 15_000,
     navigationTimeout: 30_000,
     trace: 'retain-on-failure',

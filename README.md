@@ -43,14 +43,19 @@ cp .env.example .env
 ## Chạy test
 
 ```bash
-npm test                 # Headless, cả 3 trình duyệt (chromium/firefox/webkit)
-npm run test:chromium    # Chỉ Chromium (nhanh nhất)
-npm run test:ui          # Playwright UI mode (watch + time-travel)
-npm run test:headed      # Có giao diện trình duyệt
+npm test                 # Headless, cả 3 trình duyệt (chromium/firefox/webkit) - dùng thường ngày
+npm run test:chromium    # Chỉ Chromium
+npm run test:ui          # Playwright UI mode (watch + time-travel) - tốt nhất để debug
+npm run test:headed      # Xem trình duyệt chạy: chỉ Chromium, workers=1
 npm run test:debug       # Playwright Inspector, chạy từng bước
 npm run test:smoke       # Chỉ test gắn tag @smoke
 npm run report           # Mở HTML report của lần chạy gần nhất
 ```
+
+> **Không chạy `npm test` ở chế độ headed.** WebKit headed trên Linux rất chậm và
+> flaky (MiniBrowser không có compositor). Muốn xem trình duyệt chạy thì dùng
+> `npm run test:headed` (Chromium) hoặc `npm run test:ui`. Ép headed thủ công:
+> `HEADED=true npx playwright test --project=chromium`.
 
 Chạy theo môi trường:
 
