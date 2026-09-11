@@ -82,7 +82,7 @@ Thực hiện theo hướng dẫn chi tiết trong skill `skills-rbt-manual-test
 
 ## Output
 
-- Bảng Test Cases Markdown hoàn chỉnh (có cột **REQ ID**) kèm Automation Metadata (`Automatable`, `Auto Type`, `Tags`), sẵn sàng copy sang Excel/Jira/TestRail hoặc sync trực tiếp vào Google Sheets
+- Bảng Test Cases Markdown hoàn chỉnh (có cột **REQ ID**) kèm Automation Metadata (`Automatable`, `Auto Type`, `Tags`), sẵn sàng copy sang Excel hoặc sync trực tiếp vào Google Sheet
 - Traceability Matrix + **Bảng Đối Soát Coverage** (REQ × số TC × đủ Positive/Negative/Boundary)
 - Danh sách Ambiguities đã giải quyết
 - Báo cáo Self-Quality Gate Verification (10 tiêu chí)

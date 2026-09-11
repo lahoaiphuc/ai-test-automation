@@ -41,8 +41,7 @@ Use this skill when the user asks about:
 - Flaky test debugging
 - Locator generation
 - Requirements analysis from website
-- Jira integration (fetch requirements, push test results)
-- Xray test management
+- Google Sheet integration (đọc requirements/test cases, cập nhật trạng thái bug)
 
 Typical prompts include:
 
@@ -330,35 +329,9 @@ Triggers when user asks:
 
 - phân tích requirement document
 - review yêu cầu / analyze this ticket
-- phân tích Jira ticket / requirement
+- phân tích ticket / requirement
 - tìm điểm mơ hồ trong requirement
 - analyze requirement / review requirement document
-
----
-
-### Fetch requirements from Jira
-
-Use workflow: `fetch-jira-requirements`
-
-Triggers when user asks:
-
-- fetch jira requirements
-- lấy requirement từ jira
-- get jira ticket
-- import user stories from jira
-
----
-
-### Import test results to Xray
-
-Use workflow: `import-test-results-xray`
-
-Triggers when user asks:
-
-- push test results to xray
-- đẩy kết quả test lên xray
-- import test execution to jira
-- upload playwright results to xray
 
 ---
 
@@ -440,7 +413,7 @@ Triggers when user asks:
 
 - tạo bug report
 - viết bug từ test fail
-- log bug lên Jira
+- log bug lên Google Sheet
 - create bug report from failure
 
 ---

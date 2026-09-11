@@ -21,7 +21,7 @@ skills:
 
 | Nguồn | Bắt buộc? | Ghi chú |
 |---|---|---|
-| Requirements (markdown/Jira export/user stories) | Cần ≥2 nguồn | Có thể lấy từ `/fetch-jira-requirements` |
+| Requirements (markdown/Google Sheet export/user stories) | Cần ≥2 nguồn | Sheet đọc qua connector **Google Drive** (MCP) |
 | Manual test cases (markdown/Excel/CSV) | Cần ≥2 nguồn | |
 | Automation scripts (path thư mục test) | Cần ≥2 nguồn | Agent tự scan `.spec.ts`, `*Test.java`, `.py` |
 

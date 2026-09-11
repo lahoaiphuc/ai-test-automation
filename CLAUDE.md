@@ -193,8 +193,7 @@ Agent sử dụng skills trong `.claude/skills/` tùy theo nhiệm vụ:
 | `skills-test-data-generator`    | Sinh test data unique, traceable — hỗ trợ multi-step pipeline & combinatorial data       |
 | `skills-flaky-test-analyzer`    | Phân tích và khắc phục flaky tests                                                   |
 | `skills-automation-code-reviewer` | Review chất lượng automation code theo Definition of Done — hard sleep, POM, Allure metadata, assertion yếu |
-| `skills-jira-integration`       | Tích hợp Jira/Xray — lấy requirements, đẩy test results                             |
-| `skills-bug-reporter`           | Sinh bug report chuẩn từ test FAIL — evidence, severity/priority, đẩy Jira            |
+| `skills-bug-reporter`           | Sinh bug report chuẩn từ test FAIL — evidence, severity/priority, đẩy Google Sheet    |
 | `skills-manual-test-executor`   | Thực thi manual TC trên browser thật qua Playwright MCP — chấm PASS/FAIL/BLOCKED/SKIPPED, xuất execution report |
 | `skills-test-report-analyzer`   | Phân tích test report **một lần chạy** — automation lẫn manual, gom nhóm failure theo root cause, đề xuất thứ tự xử lý |
 | `skills-test-summary-reporter`  | Tổng hợp **toàn dự án tại một mốc** — gộp nhiều execution report + bug + RTM, đối chiếu tiêu chí exit, khuyến nghị go/no-go |
@@ -407,6 +406,30 @@ Không cần dọn gì thêm. Agent tự tạo lại `docs/` và 2 file danh m�
 
 📌 **Hệ thống mới, chỉ có UI, chưa biết có module nào → chạy `/discover-system` trước tiên.** Workflow đó chốt luôn 5 mục trong bảng trên (prefix module · tiền tố TC ID · URL/tài khoản · môi trường dùng chung · business rules ẩn) và sinh sẵn `docs/requirements/README.md` + `_discovery/system_map.md`. QA có sẵn **một phần** tài liệu thì đưa vào cùng — chạy mode HYBRID, workflow sẽ lập Bản đồ phủ tài liệu để biết vùng nào tin được từ spec, vùng nào phải recon.
 
+## 6c. Nguồn Ngoài — Google Sheet (công cụ quản lý của dự án này)
+
+Dự án **quản lý tài liệu và bug trên Google Sheet**. Không dùng Jira / Xray / TestRail — mọi tham chiếu tới các công cụ đó là nhiễu, đã gỡ khỏi repo.
+
+### Agent đọc–ghi Sheet bằng cách nào
+
+| Việc | Cách làm |
+|---|---|
+| Tìm sheet theo tên | `search_files` của connector **Google Drive** (MCP) |
+| Đọc nội dung sheet | `read_file_content` — trả về nội dung dạng văn bản/bảng |
+| Ghi thêm dòng (bug, trạng thái TC) | `update_file` / `create_file` — **chỉ khi user xác nhận rõ nội dung sẽ ghi** |
+
+### Quy tắc bắt buộc
+
+| Quy tắc | Lý do |
+|---|---|
+| 🚫 **Connector chưa authorize → DỪNG và báo user**, tuyệt đối KHÔNG bịa nội dung sheet | Bịa nội dung requirement/bug còn tệ hơn không có — cả chuỗi REQ → TC → bug xây trên số liệu giả |
+| Không kết nối được → xin user **export `.xlsx`/`.csv`** rồi ủy quyền skill `xlsx` | Vẫn đi tiếp được mà không đoán |
+| **Ghi lên Sheet luôn phải hỏi trước** — trình bày đúng dòng sẽ ghi, chờ user đồng ý | Sheet là dữ liệu dùng chung của cả đội, ghi nhầm không có undo tự động |
+| Sheet là **nguồn tham chiếu**, `docs/` vẫn là **nguồn sự thật của repo** | Chuỗi truy vết `requirements → testcases → executions → bugs` nằm ở `docs/`; Sheet là bản đồng bộ cho người không mở repo |
+| 🔒 **KHÔNG chép credentials từ Sheet vào `docs/`** — chỉ ghi hình thái | Cùng lý do với quy tắc bí mật ở mục 6b |
+
+---
+
 ## 7. Test Data
 
 - Tất cả field yêu cầu **unique** (Email, Username, Code/ID): **BẮT BUỘC** dùng dữ liệu random.
@@ -455,7 +478,7 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | ----------------------------------------- | ----------------------------------------------------------- |
 | `/discover-system`                      | **Bước đầu tiên khi hệ thống không có tài liệu** — crawl navigation, lập bản đồ module, gán prefix, khởi tạo danh mục (3 modes: UI/HYBRID/DOC). KHÔNG sinh REQ ID |
 | `/generate-requirements-from-website`   | Sinh requirements từ website/module (nhánh UI Recon)        |
-| `/analyze-requirement-document`         | Phân tích requirement document (Jira/.docx/.pdf/.xlsx/.csv) — sinh tài liệu phân tích, KHÔNG sinh TC |
+| `/analyze-requirement-document`         | Phân tích requirement document (Google Sheet/.docx/.pdf/.xlsx/.csv) — sinh tài liệu phân tích, KHÔNG sinh TC |
 | `/update-requirements-from-ticket`      | **Delta mode** — cập nhật tài liệu requirements đã có từ ticket mới: nhận diện THÊM/SỬA/BỎ, giữ nguyên REQ ID, ghi Nhật ký thay đổi, xuất Impact Report cho test cases |
 | `/generate-testcases-manual-rbt`        | Sinh manual test cases theo AI-RBT 6 bước (FULL RBT mode) |
 | `/generate-testcases-from-requirements` | Sinh test cases nhanh từ requirements (QUICK mode)         |
@@ -476,9 +499,7 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | `/heal-locators`                        | Rà & sửa locator trong Page Object sau khi UI đổi (2 modes: SCAN/HEAL) |
 | `/review-automation-code`               | Review chất lượng automation code theo Definition of Done (2 modes: REVIEW/FIX) |
 | `/analyze-flaky-tests`                  | Phân tích và khắc phục flaky tests                     |
-| `/fetch-jira-requirements`              | Lấy requirements/user stories từ Jira                     |
-| `/import-test-results-xray`             | Đẩy kết quả test lên Xray                              |
-| `/create-bug-report`                    | Sinh bug report chuẩn từ test FAIL (tùy chọn đẩy Jira)  |
+| `/create-bug-report`                    | Sinh bug report chuẩn từ test FAIL (tùy chọn đẩy Google Sheet) |
 | `/execute-test-cases`                   | Thực thi manual TC trên browser thật — chấm PASS/FAIL/BLOCKED/SKIPPED, xuất execution report |
 | `/retest-fixed-bugs`                    | **Đóng vòng lặp bug** — retest bug đã fix trên build mới, chấm FIXED/NOT_FIXED/PARTIAL, chạy regression quanh vùng fix (2 modes: RETEST/FULL) |
 | `/analyze-test-report`                  | Phân tích test report **một lần chạy** — 2 nhánh AUTOMATION / MANUAL, gom nhóm failure, đề xuất xử lý |

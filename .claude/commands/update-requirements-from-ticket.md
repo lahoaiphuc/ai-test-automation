@@ -48,7 +48,7 @@ Module đang phát triển thì ticket liên tục sửa/bổ sung yêu cầu. W
 
 ### Bước 2: Đọc ticket mới
 
-Theo **mục 3.2** của skill — ủy quyền skill `docx`/`xlsx`/`pdf` đúng định dạng, đọc cả comments và file đính kèm. Không tự fetch URL Jira.
+Theo **mục 3.2** của skill — ủy quyền skill `docx`/`xlsx`/`pdf` đúng định dạng, đọc cả comment và file đính kèm. Ticket nằm trên Google Sheet → đọc qua connector **Google Drive** (MCP); connector chưa authorize thì **dừng và báo user**, KHÔNG bịa nội dung.
 
 ### Bước 3: Phân loại delta (TRỌNG TÂM)
 

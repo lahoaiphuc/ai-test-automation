@@ -5,7 +5,7 @@ description: Kỹ năng phân tích trang web/module/tài liệu và sinh ra tà
 
 # Kỹ năng Phân tích Yêu cầu (Requirements Analyzer)
 
-Kỹ năng này cung cấp các hướng dẫn chi tiết để AI (Claude Code) có thể chuyển đổi giao diện UI, cấu trúc DOM/HTML, hoặc tài liệu (Jira ticket, .doc, user story) thành tài liệu Yêu cầu rõ ràng, chi tiết, **truy vết được**, phục vụ trực tiếp cho QA, Tester và Developer.
+Kỹ năng này cung cấp các hướng dẫn chi tiết để AI (Claude Code) có thể chuyển đổi giao diện UI, cấu trúc DOM/HTML, hoặc tài liệu (.doc, user story, BRD) thành tài liệu Yêu cầu rõ ràng, chi tiết, **truy vết được**, phục vụ trực tiếp cho QA, Tester và Developer.
 
 ## 1. Mục tiêu cốt lõi
 - Xây dựng tài liệu yêu cầu bám sát thực tế hệ thống đang chạy hoặc tài liệu gốc.
@@ -36,7 +36,7 @@ Kỹ năng này cung cấp các hướng dẫn chi tiết để AI (Claude Code)
 
 ### 2.1. Nối tiếp mã REQ giữa các lần chạy (BẮT BUỘC — chống đụng mã)
 
-Cùng một module có thể được phân tích **nhiều lần bằng nhiều workflow khác nhau** (`/generate-requirements-from-website` từ UI, `/analyze-requirement-document` từ Jira ticket, `/fetch-jira-requirements`…). Nếu mỗi lần đều đánh lại từ `01`, các dải mã sẽ đụng nhau và **RTM map sai hoàn toàn**.
+Cùng một module có thể được phân tích **nhiều lần bằng nhiều workflow khác nhau** (`/generate-requirements-from-website` từ UI, `/analyze-requirement-document` từ Google Sheet…). Nếu mỗi lần đều đánh lại từ `01`, các dải mã sẽ đụng nhau và **RTM map sai hoàn toàn**.
 
 **Quy trình bắt buộc TRƯỚC KHI gán REQ ID đầu tiên:**
 
@@ -76,7 +76,7 @@ Skill có **2 nhánh trích xuất** tuỳ theo nguồn đầu vào. Xác địn
 | Nguồn đầu vào | Nhánh | Đặc điểm |
 |---|---|---|
 | Website/ứng dụng đang chạy | **3.1 — UI Recon** | Sự thật nằm ở hệ thống; xác minh bằng tương tác thật |
-| Jira ticket, .docx, .pdf, .xlsx/.csv, .xml, user story | **3.2 — Document Analysis** | Sự thật nằm ở văn bản; xác minh bằng trích dẫn nguyên văn |
+| Google Sheet, .docx, .pdf, .xlsx/.csv, .xml, user story | **3.2 — Document Analysis** | Sự thật nằm ở văn bản; xác minh bằng trích dẫn nguyên văn |
 | Có cả hai, tài liệu phủ **đầy đủ** module | Chạy **3.2 trước** (nắm ý định) → **3.1 sau** (đối chiếu thực tế) | Mọi lệch pha giữa 2 nguồn là ambiguity, xem 3.3 |
 | Có cả hai nhưng tài liệu **chỉ phủ một phần** | **3.3.1 — Tài liệu bán phần** | Tình huống phổ biến nhất ở hệ thống thiếu tài liệu. Phải chia vùng trước khi recon |
 
@@ -164,13 +164,13 @@ Mỗi định dạng có cách đọc riêng. **KHÔNG** dùng `Read` thẳng ch
 
 | Định dạng | Cách xử lý bắt buộc |
 |---|---|
-| `.md`, `.txt`, `.html`, `.xml`, `.json` | `Read` trực tiếp. File `.doc` export từ Jira thực chất là HTML → `Read` rồi bóc tag |
+| `.md`, `.txt`, `.html`, `.xml`, `.json` | `Read` trực tiếp. File `.doc` export từ công cụ web thực chất là HTML → `Read` rồi bóc tag |
 | `.docx`, `.dotx` | **Ủy quyền cho skill `docx`** — là ZIP/OOXML, `Read` thẳng ra rác |
 | `.xlsx`, `.xlsm`, `.csv`, `.tsv` | **Ủy quyền cho skill `xlsx`** |
 | `.pdf` | **Ủy quyền cho skill `pdf`** |
 | `.pptx` | **Ủy quyền cho skill `pptx`** |
 | Ảnh (mockup, screenshot) | `Read` — công cụ hiển thị ảnh trực tiếp |
-| URL Jira/Confluence | **KHÔNG tự fetch.** Route sang `/fetch-jira-requirements` + `skills-jira-integration`. Nếu MCP chưa authorize → **dừng và báo user**, tuyệt đối không bịa nội dung ticket |
+| URL Google Sheet / Google Docs | Đọc qua connector **Google Drive** (MCP) — `search_files` tìm theo tên, `read_file_content` lấy nội dung. Connector chưa authorize → **dừng và báo user**, hoặc xin file export `.xlsx`/`.csv`; tuyệt đối không bịa nội dung |
 
 > ⚠️ Nếu không đọc được file bằng bất kỳ cách nào → **báo user và dừng**. Không suy đoán nội dung từ tên file.
 
@@ -433,7 +433,7 @@ Tách ngay nếu gặp **bất kỳ** dấu hiệu nào sau:
 - Module chứa **≥ 2 entity nghiệp vụ độc lập** có vòng đời riêng (VD: `Customer` và `Contact`, `Project` và `Task`)
 - Phạm vi khảo sát mở rộng sang **sub-module/tab con** có nghiệp vụ riêng (VD: phân tích cả 17 tab của Project)
 - Có **≥ 2 ma trận trạng thái** khác nhau trong cùng tài liệu
-- Người dùng nêu rõ team làm việc theo Jira và cần chia việc theo Story
+- Người dùng nêu rõ team chia việc theo Story và cần tài liệu tách tương ứng
 
 ### 5.3. Cấu trúc thư mục (áp dụng cho MỌI module, tách hay không tách)
 
@@ -880,4 +880,4 @@ Evidence là **nguồn sự thật** cho mọi workflow phía sau (`/generate_te
 - **KHÔNG bỏ qua comments** — comment thường là quyết định mới nhất và **đè lên** phần mô tả gốc.
 - **Xung đột giữa các nguồn KHÔNG được tự giải quyết im lặng** — luôn thành `AMB-XX`, kể cả khi đã áp thứ tự ưu tiên ở mục 3.2 Bước 3.
 - Phân biệt **"Không đề cập trong tài liệu"** (tài liệu thiếu → cần hỏi) với **"Không áp dụng"** (đã cân nhắc và xác định không liên quan). Hai câu này nghĩa khác hẳn nhau.
-- **KHÔNG tự fetch URL Jira/Confluence** — route sang `/fetch-jira-requirements`. MCP chưa authorize thì báo user, tuyệt đối không bịa nội dung ticket.
+- **KHÔNG bịa nội dung Google Sheet** — connector Google Drive chưa authorize thì **dừng và báo user**, hoặc xin file export `.xlsx`/`.csv`. Tuyệt đối không suy đoán nội dung sheet từ tên file/tên tab.

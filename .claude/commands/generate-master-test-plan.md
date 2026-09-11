@@ -98,7 +98,7 @@ Hỏi **một lượt**, không hỏi lắt nhắt:
 | **Môi trường** | Có môi trường test riêng hay dùng chung, ai dựng, khi nào sẵn sàng |
 | **Tiêu chí exit của dự án** | Có bộ riêng không, hay dùng bộ mặc định của skill |
 | **Loại test trong phạm vi** | Chức năng · regression · UAT · hiệu năng · bảo mật — cái nào đội này làm, cái nào đội khác |
-| **Công cụ quản lý** | Jira/Xray hay file markdown trong repo |
+| **Công cụ quản lý** | Google Sheet hay file markdown trong repo |
 | **Chuẩn tài liệu khách hàng yêu cầu** | Mặc định dùng cấu trúc 29119-3 của template này. Khách có template riêng (hay bắt theo IEEE 829 16 mục) → **hỏi xin file mẫu**, ánh xạ nội dung sang đó thay vì bắt khách đọc cấu trúc lạ |
 | **Có Test Strategy cấp tổ chức không** | Có → phải điền mục 11.2 *Điểm làm khác chiến lược chung*. Không có → ghi `Không áp dụng` |
 

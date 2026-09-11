@@ -18,7 +18,7 @@ skills:
 
 # Workflow: Phân Tích Requirement Document
 
-Workflow này phân tích requirement documents (Jira tickets, .doc files, user stories, design mockups) và sinh ra một tài liệu phân tích chi tiết. **KHÔNG sinh test cases** — chỉ tập trung vào hiểu, phân rã, và phát hiện rủi ro/mơ hồ trong yêu cầu.
+Workflow này phân tích requirement documents (Google Sheet, .docx, user stories, design mockups) và sinh ra một tài liệu phân tích chi tiết. **KHÔNG sinh test cases** — chỉ tập trung vào hiểu, phân rã, và phát hiện rủi ro/mơ hồ trong yêu cầu.
 
 ## Khi nào sử dụng
 
@@ -63,13 +63,13 @@ Agent cần thu thập từ user:
 | Định dạng | Cách xử lý |
 |---|---|
 | `.md`, `.txt`, `.html`, `.xml`, `.json` | `Read` trực tiếp |
-| `.doc` export từ Jira | Thực chất là HTML → `Read` rồi bóc tag |
+| `.doc` export từ công cụ web | Thực chất là HTML → `Read` rồi bóc tag |
 | `.docx`, `.dotx` | **Ủy quyền skill `docx`** — là ZIP/OOXML, `Read` thẳng ra rác |
 | `.xlsx`, `.xlsm`, `.csv`, `.tsv` | **Ủy quyền skill `xlsx`** |
 | `.pdf` | **Ủy quyền skill `pdf`** |
 | `.pptx` | **Ủy quyền skill `pptx`** |
 | Ảnh (`.png`, `.jpg`) | `Read` — công cụ hiển thị ảnh trực tiếp |
-| **URL Jira / Confluence** | ❌ **KHÔNG tự fetch.** Route sang `/fetch-jira-requirements` (skill `skills-jira-integration`). Nếu MCP Atlassian chưa authorize → **dừng, báo user cần authorize**, tuyệt đối KHÔNG bịa nội dung ticket |
+| **URL Google Sheet / Google Docs** | Đọc qua connector **Google Drive** (MCP) — `search_files` tìm theo tên, `read_file_content` lấy nội dung. Connector chưa authorize → **dừng, báo user cần kết nối**, tuyệt đối KHÔNG bịa nội dung. Không kết nối được → xin user export `.xlsx`/`.csv` rồi ủy quyền skill `xlsx` |
 
 > [!NOTE]
 > Nếu user chỉ cung cấp file tài liệu mà không có mockup, agent vẫn phải phân tích đầy đủ dựa trên nội dung document. Nếu có mockup/screenshot, agent phân tích UI chi tiết hơn.
@@ -307,9 +307,9 @@ Agent PHẢI xuất artifact theo cấu trúc sau:
 - **KHÔNG tự viết AC thay PO/BA.** Ticket thiếu AC → ghi nhận đúng thực trạng + `AMB-XX` 🔴 High. Đây là luật tương đương "không đoán locator" của nhánh UI — vi phạm là tài liệu mất giá trị hoàn toàn
 - **KHÔNG đánh lại mã REQ từ `01`** nếu module đã có tài liệu — luôn đánh tiếp từ số cuối (mục 2.1 của skill). Đụng mã là vỡ toàn bộ RTM
 - **KHÔNG đọc file nhị phân bằng `Read`** (`.docx`/`.xlsx`/`.pdf`/`.pptx`) — ủy quyền đúng skill. Đọc không được thì **dừng và báo user**, không suy đoán từ tên file
-- **KHÔNG tự fetch URL Jira/Confluence** — route sang `/fetch-jira-requirements`. MCP chưa authorize thì báo user, tuyệt đối không bịa nội dung ticket
+- **KHÔNG bịa nội dung Google Sheet** — connector Google Drive chưa authorize thì **dừng và báo user**, hoặc xin file export `.xlsx`/`.csv`. Tuyệt đối không suy đoán nội dung sheet từ tên file/tên tab
 - **KHÔNG tự đoán** business logic nếu document không nói rõ → đưa vào Ambiguities
-- **KHÔNG bỏ qua comments** trong Jira ticket — comments thường là quyết định mới nhất và **đè lên** phần mô tả gốc
+- **KHÔNG bỏ qua comment ô, cột `Ghi chú` và tab phụ** của sheet — đó thường là quyết định mới nhất và **đè lên** phần mô tả ở cột chính
 - **KHÔNG tự giải quyết im lặng xung đột giữa các nguồn** — luôn thành `AMB-XX`, kể cả khi đã áp thứ tự ưu tiên
 
 ### Bắt buộc (✅)

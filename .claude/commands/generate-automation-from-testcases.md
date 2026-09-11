@@ -51,7 +51,7 @@ Nếu user chưa cung cấp đủ → hỏi trước khi bắt đầu.
 
 1. **Đọc file test cases** do user cung cấp:
    - File local → `Read`
-   - URL (Google Sheets, Confluence, etc.) → `WebFetch`
+   - URL (Google Sheet, Confluence, etc.) → `WebFetch`
    - Xác định format: Markdown table, Excel, JSON, hoặc free-form text
 
 2. **Parse test cases** và trích xuất:

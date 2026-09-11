@@ -30,7 +30,7 @@ skills:
 
 | Mode | Khi nào dùng | Input chính |
 |------|-------------|-------------|
-| **DOCUMENT** (mặc định) | User cung cấp tài liệu/spec mô tả modules + business rules | File `.md`, `.doc`, Jira ticket, hoặc mô tả text |
+| **DOCUMENT** (mặc định) | User cung cấp tài liệu/spec mô tả modules + business rules | File `.md`, `.doc`, Google Sheet, hoặc mô tả text |
 | **BROWSER** | User cung cấp URL và muốn agent inspect DOM thực tế | URL ứng dụng + credentials (nếu cần) |
 
 > Agent tự chọn mode:
@@ -46,7 +46,7 @@ skills:
 | Input | Bắt buộc | Mô tả |
 |-------|----------|-------|
 | **Tên tính năng / luồng** | ✅ | VD: "Biên bản thanh toán cho đối tác" |
-| **Tài liệu yêu cầu** (DOCUMENT mode) | ✅ | File `.md`, Jira ticket, user story, hoặc text mô tả |
+| **Tài liệu yêu cầu** (DOCUMENT mode) | ✅ | File `.md`, Google Sheet, user story, hoặc text mô tả |
 | **URL ứng dụng** (BROWSER mode) | ✅ | Để agent inspect DOM thực tế |
 | **Danh sách modules tham gia** | ⚠️ Nên có | Nếu không → agent tự extract từ document/browser |
 | **Danh sách dimensions** | ⚠️ Nên có | VD: loại đối tác, loại thuế... Nếu không → agent tự extract |

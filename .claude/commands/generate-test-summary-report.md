@@ -53,7 +53,7 @@ Glob theo bảng Input của skill, **ghi lại đường dẫn từng file** đ
 | Tình huống | Xử lý |
 |---|---|
 | Module trong phạm vi nhưng **không có execution report** | Ghi vào mục 2 "chưa được kiểm thử" — **KHÔNG** bỏ qua im lặng |
-| Không có `docs/bugs/` (đội dùng Jira) | Lấy qua `skills-jira-integration`. Không lấy được → ghi rõ "không đối chiếu được tình hình bug", và **hạ mức tin cậy của khuyến nghị** |
+| Không có `docs/bugs/` (đội theo dõi bug trên Google Sheet) | Lấy qua connector **Google Drive** (MCP). Không lấy được → ghi rõ "không đối chiếu được tình hình bug", và **hạ mức tin cậy của khuyến nghị** |
 | Không có `docs/requirements/README.md` | ⚠️ Không xác định được vùng mù → ghi rõ: *"chưa khảo sát cấp hệ thống, không kết luận được đã phủ hết hệ thống hay chưa"* |
 | Nhiều run cùng một module | Lấy **run mới nhất** làm số chính; nêu trend ở phần ghi chú nếu có khác biệt đáng kể |
 

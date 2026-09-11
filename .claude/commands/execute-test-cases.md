@@ -102,5 +102,5 @@ Agent chạy tiếp qua TC fail (fail-forward), **chỉ dừng** khi:
 |---|---|
 | Có TC FAIL | `/create-bug-report` — sinh bug report chuẩn từ evidence đã thu |
 | Nhiều TC FAIL cần gom nhóm root cause | `/analyze-test-report` |
-| Cần đẩy kết quả lên Xray | `/import-test-results-xray` |
+| Cần đẩy kết quả lên Google Sheet | Rút bảng `TC ID × Trạng thái × Ghi chú` từ `execution_report.md`, **trình cho user duyệt**, rồi ghi qua connector **Google Drive** (MCP) |
 | TC FAIL do TC viết sai (không phải lỗi hệ thống) | `/review-testcases` mode FIX — **không sửa TC trong lúc chạy** |

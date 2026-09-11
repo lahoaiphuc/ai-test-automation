@@ -76,7 +76,7 @@ Mỗi tiêu chí chấm **Đạt / Không đạt / Không áp dụng**, kèm s�
 | `traceability_matrix.md` | Độ phủ REQ ↔ TC ↔ Automation | Nếu có |
 | Report automation trong `reports/` | Kết quả suite tự động | Nếu có |
 
-> Thiếu `docs/bugs/` (đội dùng Jira) → lấy qua `skills-jira-integration`, đừng bỏ trống mục bug.
+> Thiếu `docs/bugs/` (đội theo dõi bug trên Google Sheet) → lấy qua connector **Google Drive** (MCP), đừng bỏ trống mục bug.
 
 ---
 

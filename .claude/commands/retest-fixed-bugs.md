@@ -33,7 +33,7 @@ Workflow này đóng **vòng lặp cuối** của quy trình kiểm thử: dev b
 
 | Cần có | Nguồn | Bắt buộc |
 |---|---|---|
-| Bug cần retest | File `docs/bugs/<module>/BUG_*.md`, hoặc Jira key qua `/fetch-jira-requirements` | ✅ |
+| Bug cần retest | File `docs/bugs/<module>/BUG_*.md`, hoặc dòng bug trên Google Sheet (đọc qua connector **Google Drive** (MCP)) | ✅ |
 | **Build / version mới** | User cung cấp | ✅ |
 | Môi trường + tài khoản | `.env` hoặc user | ✅ |
 | Môi trường dùng chung? | User — bật quy tắc auto-skip của skill executor | ✅ |
@@ -202,7 +202,7 @@ Thêm mục **Lịch sử retest** vào cuối file `docs/bugs/<module>/BUG_*.md
 | 2026-08-08 | v2.4.2 | ❌ NOT_FIXED | [retest_1785350000](…) | Lỗi vẫn tái hiện 2/2 lần |
 ```
 
-Bug **đẩy lên Jira** → cập nhật trạng thái tương ứng qua `skills-jira-integration`; **không** tự đóng ticket, chỉ chuyển sang trạng thái chờ xác nhận trừ khi user cho phép rõ ràng.
+Bug **đang theo dõi trên Google Sheet** → cập nhật cột trạng thái tương ứng qua connector **Google Drive** (MCP), sau khi trình nội dung cho user duyệt; **không** tự đóng bug, chỉ chuyển sang trạng thái chờ xác nhận trừ khi user cho phép rõ ràng.
 
 ---
 

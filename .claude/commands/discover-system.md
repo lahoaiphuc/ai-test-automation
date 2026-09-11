@@ -124,7 +124,7 @@ Sửa gì thì ghi **1 dòng vào Nhật ký danh mục**. Không lệch → nê
 > Mode UI → bỏ qua, sang Bước 3.
 
 1. **Đọc đúng cách theo định dạng** — theo bảng ở skill mục **3.2 Bước 0**:
-   `.docx` → skill `docx` · `.xlsx/.csv` → skill `xlsx` · `.pdf` → skill `pdf` · URL Jira → `/fetch-jira-requirements`
+   `.docx` → skill `docx` · `.xlsx/.csv` → skill `xlsx` · `.pdf` → skill `pdf` · URL Google Sheet → connector **Google Drive** (MCP)
    ⚠️ Không đọc được → **báo user và dừng**, không suy đoán từ tên file
 2. **Lưu bản gốc** vào `docs/requirements/_discovery/sources/` — giữ nguyên tên file, để người review mở đối chiếu được
 3. **Lập Bản đồ phủ tài liệu** — đây là sản phẩm chính của bước này:

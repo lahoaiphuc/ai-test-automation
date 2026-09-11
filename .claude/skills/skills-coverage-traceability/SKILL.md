@@ -24,7 +24,7 @@ Sử dụng skill này khi:
 
 | Nguồn | Định dạng chấp nhận | Cách nhận diện |
 |---|---|---|
-| **Requirements** | Markdown, Jira export, user stories, file phân tích từ `skills-requirements-analyzer` | ID dạng `REQ-xxx`, `US-xxx`, hoặc heading đánh số |
+| **Requirements** | Markdown, Google Sheet export, user stories, file phân tích từ `skills-requirements-analyzer` | ID dạng `REQ-xxx`, `US-xxx`, hoặc heading đánh số |
 | **Manual Test Cases** | Markdown, Excel/CSV | ID dạng `TC_xxx` |
 | **Automation Scripts** | `.spec.ts`, `*Test.java`, `.py` | Tên test method/block, annotation/tag chứa TC ID |
 
