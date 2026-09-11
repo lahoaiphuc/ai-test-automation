@@ -21,6 +21,7 @@ Workflow này chạy **trước tất cả**, khi bạn mở một hệ thống 
 |---|---|
 | Liệt kê toàn bộ module / trang / entity của hệ thống | ❌ Sinh `REQ-XXX-NN` — **tuyệt đối không gán mã REQ** |
 | Gán **prefix** cho từng module (`LOGIN`, `CUST`…) và đăng ký chống trùng | ❌ Sinh Field Spec, validation message, ma trận phân quyền chi tiết |
+| Ghi **route thật + cách tới** của từng màn hình (đã bấm được) | ❌ **Đoán route theo nền tảng** — xem luật cứng ở Bước 3.1a |
 | Ghi nhận độ sâu tài liệu QA cung cấp (nếu có) | ❌ Sinh test case |
 | Đánh giá risk sơ bộ + đề xuất thứ tự khảo sát | ❌ Trigger validation từng field (việc của recon cấp module) |
 | Khởi tạo `docs/requirements/README.md` | ❌ Thay thế `/generate-requirements-from-website` |
@@ -165,6 +166,32 @@ browser_navigate → chờ load → browser_snapshot
 | Link không nằm trong menu | `browser_evaluate` gom toàn bộ `a[href]` trên các trang chính, lọc trùng | Trang chỉ tới được từ nút trong bảng (Chi tiết, Sửa) |
 | Route ẩn | Đọc file JS định tuyến qua network (3.2) hoặc thử URL theo mẫu quan sát được | ⚠️ Route đoán ra mà không mở được → ghi `❔ Nghi có, chưa xác minh`, **không** đưa vào danh mục module |
 | Trang chỉ vào được từ hành động | Mở 1 bản ghi bất kỳ ở chế độ xem | ⚠️ Môi trường dùng chung: **chỉ mở, không sửa** |
+
+**3.1a — 🚫 CẤM ĐOÁN ROUTE — bấm nút, đừng gõ URL (quy tắc cứng)**
+
+> Bổ sung 2026-09-11 sau sự cố thật: agent đoán route checkout là `/checkout/` theo mặc định Magento, gặp 403, rồi **kết luận sai rằng hệ thống chặn chức năng thanh toán** và đánh dấu 2 module risk cao nhất là BLOCKED. Route thật là `/onestepcheckout/` — vào được bình thường, đặt hàng được. Cả một vùng nghiệp vụ lớn suýt bị bỏ trắng vì một cú đoán.
+
+| Luật | Chi tiết |
+|---|---|
+| **Tới màn hình bằng đúng cách người dùng tới** | Muốn biết trang giỏ hàng/thanh toán/chi tiết → **thực hiện hành động** (add to cart → mở giỏ → bấm Checkout), **KHÔNG** gõ URL suy từ nền tảng |
+| **Nền tảng không quyết định route** | Magento mặc định `/checkout/`, nhưng site cài One Step Checkout thì là `/onestepcheckout/`; WordPress có thể đổi permalink; SPA có router riêng. **Biết hệ thống chạy nền tảng gì KHÔNG cho phép suy ra đường dẫn** |
+| **Nút không có `href` là chuyện bình thường** | Quét `a[href]` sẽ **không** thấy `<button>` điều hướng bằng JS. Gặp nút hành động → **bấm nó rồi đọc `location.href`**, đó mới là route thật |
+| **403/404 từ URL tự gõ KHÔNG phải bằng chứng bị chặn** | Chỉ được ghi "bị chặn" khi **đã bấm từ UI** mà vẫn hỏng. URL tự gõ hỏng ⇒ nhiều khả năng **đoán sai URL**, ghi `❔ chưa xác minh` |
+| **Không suy rộng từ một path sang cả nhánh** | `/checkout/` 403 **không** kéo theo `/checkout/onepage/success/` 403 (thực tế trang này vào được). Kết luận chỉ đúng trong phạm vi đã thử |
+| **Ghi route kèm cách tới** | Bảng route phải có cột *"Tới bằng cách nào"*: `bấm nút X ở màn hình Y`. Không ghi được cách tới ⇒ chưa khảo sát thật |
+
+**Quy trình bắt buộc cho mọi màn hình nằm sau một hành động:**
+
+```
+1. Thực hiện hành động nghiệp vụ đưa hệ thống vào đúng trạng thái
+   (ví dụ: add to cart để giỏ có hàng)
+2. Mở phần tử điều hướng bằng thao tác thật (bấm icon/nút), KHÔNG gõ URL
+3. Đọc href nếu là <a>; nếu là <button>/không có href → BẤM rồi đọc location.href
+4. Ghi lại: route thật + cách tới + title trang
+5. Chỉ khi bước 2–3 thất bại mới ghi "chưa xác minh", kèm đúng điều kiện đã thử
+```
+
+⚠️ **Dấu hiệu bạn đang đoán:** viết ra một URL mà chưa từng bấm nút nào dẫn tới nó. Dừng lại, quay về bước 2.
 
 **3.2 — Đọc tầng network** (skill mục **3.1.1**): bật `browser_network_requests` trong lúc crawl, gom danh sách endpoint. Đây là cách rẻ nhất để phát hiện:
 - Module **có API nhưng chưa có UI** → tính năng đang build dở → ghi `⚪ Chưa implement`
@@ -379,6 +406,8 @@ Không có mục này → workflow sau hiểu là bản đồ 1 file và **sẽ 
 - [ ] Mỗi module có ≥ 1 ảnh trong `_discovery/evidence/`, hoặc ghi rõ lý do không có
 - [ ] Ô phân quyền **suy diễn** đều mang dấu ⚠️, không lẫn với ô đã kiểm chứng
 - [ ] Vùng chưa xác minh được liệt kê thật, **không** làm tròn thành "đã khảo sát xong"
+- [ ] **Mọi route ghi trong tài liệu đều đã thực sự mở được, và ghi kèm cách tới** (bấm nút gì ở màn hình nào) — không có route nào chỉ do suy đoán từ nền tảng (mục 3.1a)
+- [ ] **Không có kết luận "bị chặn/không có" nào chỉ dựa trên URL tự gõ** — phải đã thử bấm từ UI (mục 3.1a)
 - [ ] `README.md` và `system_map.md` khớp nhau về số module và prefix
 - [ ] **Danh mục khớp thư mục thực tế** — đã chạy đối chiếu ở Bước 1.3; lệch thì đã sửa và ghi Nhật ký danh mục, hoặc đã báo user (trường hợp trùng prefix)
 - [ ] **Nếu đã tách file:** index vẫn tên `system_map.md` · có mục `## Bản đồ tài liệu` · đủ 6 bất biến ở mục **6.5** (prefix giữ nguyên · mỗi module đúng 1 file · tổng khớp · trạng thái recon chỉ ở `README.md` · link 2 chiều · không nhân bản mục cắt ngang)

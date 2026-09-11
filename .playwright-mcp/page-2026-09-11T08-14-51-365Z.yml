@@ -1,0 +1,7 @@
+- generic [active] [ref=e1]:
+  - heading "Error 403 Blocked unwanted bot" [level=1] [ref=e2]
+  - paragraph [ref=e3]: Blocked unwanted bot
+  - heading "Error 54113" [level=3] [ref=e4]
+  - paragraph [ref=e5]: "Details: cache-hkg17935-HKG 1789114491 2044597236"
+  - separator [ref=e6]
+  - paragraph [ref=e7]: Varnish cache server
