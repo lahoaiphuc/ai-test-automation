@@ -15,7 +15,7 @@ playwright/.cache/
 # ==============================
 # Environment variables / Secrets
 # ==============================
-.env
+#.env
 .env.dev
 .env.staging
 .env.prod
